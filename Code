@@ -1,0 +1,157 @@
+/**************************************************************************************
+* By Kingg Ajee                                                                       *
+***************************************************************************************/
+
+using System;
+using HtmlAgilityPack;
+//For Html Agilty Pack, Go to your solution on Visual Studio and right click your project and click add nuget package. Then search HtmlAgiltyPack
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Net;
+using System.Text;
+using System.IO;
+using System.Threading;
+using System.Linq;
+
+namespace RickChecker
+{
+   
+    class Program
+    {
+       public static string title = "";
+        public static string a = "";
+        public static string htmlCode = "";
+        static void alert(){
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.WriteLine("RICK ROLL ALERT");
+            Console.Beep(500, 600);
+            Console.Beep(400, 600);
+            Console.Beep(500, 600);
+            Console.Beep(400, 600);
+            Console.Beep(500, 600);
+            Console.Beep(400, 600);
+            Console.Beep(500, 600);
+            Console.Beep(400, 600);
+            Console.BackgroundColor = ConsoleColor.Black;
+        }
+        static void titleFinder(string url)
+        {////yt-formatted-string[@class="style-scope ytd-video-primary-info-renderer"]
+            HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
+            HtmlDocument doc = web.Load(url);
+            
+            foreach (var item in doc.DocumentNode.SelectNodes("//title"))
+            {
+                Console.WriteLine("Title: " + item.InnerText);
+                title = item.InnerText;
+            }
+
+
+            a = doc.DocumentNode.SelectSingleNode("//meta[@itemprop='description']").GetAttributeValue("content", "default");
+            
+            Console.WriteLine("Description: "+a);
+            using (WebClient client = new WebClient())
+            {
+                htmlCode = client.DownloadString(url);
+                Console.WriteLine(htmlCode);
+            }
+
+            
+        }
+        static void checking()
+        {
+            for (int i = 0; i <= 100; i++)
+            {
+                Console.Write($"\rFinding Link: {i}%");
+                Thread.Sleep(25);
+            }
+            Console.WriteLine("\n");
+            Console.WriteLine("Found Video");
+            for (int i = 0; i <= 100; i++)
+            {
+                Console.Write($"\rChecking Title: {i}% ");
+                Thread.Sleep(25);
+            }
+            Console.WriteLine("\n");
+            Console.WriteLine("Found Title");
+        }
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+
+                Console.Title = "RICK ROLL CHECKER";
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("██████████████████████████████████████████████████████████████████████████████████████████");
+                Thread.Sleep(1000);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("█▄─▄▄▀█▄─▄█─▄▄▄─█▄─█─▄███▄─▄▄▀█─▄▄─█▄─▄███▄─▄█████─▄▄▄─█─█─█▄─▄▄─█─▄▄▄─█▄─█─▄█▄─▄▄─█▄─▄▄▀█");
+                Thread.Sleep(1000);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("██─▄─▄██─██─███▀██─▄▀█████─▄─▄█─██─██─██▀██─██▀███─███▀█─▄─██─▄█▀█─███▀██─▄▀███─▄█▀██─▄─▄█");
+                Thread.Sleep(1000);
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine("▀▄▄▀▄▄▀▄▄▄▀▄▄▄▄▄▀▄▄▀▄▄▀▀▀▄▄▀▄▄▀▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▄▀▀▀▄▄▄▄▄▀▄▀▄▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▀▄▄▀▄▄▄▄▄▀▄▄▀▄▄▀");
+
+                Console.Write("Type link: (ONLY YOUTUBE) ");
+                string line = Console.ReadLine();
+                if (!line.StartsWith("https://www.youtube.com/watch?v="))
+                {
+
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("ERROR: This link isn't valid. Please check if Link starts with https://www.youtube.com/watch?v=");
+                    Console.ForegroundColor = ConsoleColor.Blue;
+
+
+                }
+                else if (line.Length < 33)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Error: Need more characters");
+                }
+                else if (line.Length > 32)
+                {
+                    checking();
+                    titleFinder(line);
+                    string titlee = title.ToLower();
+                    string code = htmlCode.ToLower();
+                    if (titlee.Contains("rick") || titlee.Contains("rick roll") || titlee.Contains("rick astley") || titlee.Contains("never gonna give you up"))
+                    {
+
+                        Console.WriteLine("FOUND IN TITLE");
+                        alert();
+                    }
+                    else if (a.Contains("rick") || a.Contains("roll") || a.Contains("rick astley") || a.Contains("never gonna give you up"))
+                    {
+
+                        Console.WriteLine("FOUND IN DESCRIPTION");
+                        alert();
+                    }
+                    else if (code.Contains("rick")  || code.Contains("rick astley") || code.Contains("#rickroll") || code.Contains("#rickastley") || code.Contains("never gonna give you up"))
+                    {
+
+                        Console.WriteLine("FOUND IN CODE");
+                        alert();
+                    }
+                    else
+                    {
+                        Console.BackgroundColor = ConsoleColor.Green;
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine("THIS LINK HAS BEEN CHECKED, NO RICK ROLLS IN THE VIDEO  ");
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("WARNING! THIS HAS ONLY CHECKED THE TITLE, DESCRIPTION, AND THE CODE. THIS VIDEO MAY HAVE RICK ROLLS ");
+                        Console.ForegroundColor = ConsoleColor.Blue;
+
+                    }
+                }
+
+                
+            }
+        }
+
+    
+     }
+
+}
